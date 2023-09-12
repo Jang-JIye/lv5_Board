@@ -103,13 +103,13 @@ public class BoardService {
         Board board = findBoard(id);
 
         if (!likeBoardRepository.existsByUserAndBoard(user, board)) {
-            board.setLikecnt(board.getLikecnt() + 1);
+            board.setLikeCnt(board.getLikeCnt() + 1);
 
             likeBoardRepository.save(new LikeBoard(user, board));
 
             return ResponseEntity.ok().body("좋야요!");
         } else {
-            board.setLikecnt(board.getLikecnt() - 1);
+            board.setLikeCnt(board.getLikeCnt() - 1);
             likeBoardRepository.deleteByUserAndBoard(user, board);
 
             return ResponseEntity.ok().body("좋아요 취소!");

@@ -34,7 +34,7 @@ public class Board extends TimeStamped {
     private User user;
 
     @Column(name = "like_cnt")
-    private Integer likecnt = 0;
+    private Integer likeCnt = 0;
 
 
     public Board(BoardRequestDto requestDto, User user) {
