@@ -11,12 +11,14 @@ public class BoardResponseDto {
     private String username;//작성자명
     private String contents;//작성 내용
     private LocalDateTime createdAt; // 작성시간
+    private Integer likecnt;
 
     public BoardResponseDto(Board board) {
         this.title = board.getTitle();
         this.username = board.getUsername();
         this.contents = board.getContents();
         this.createdAt = board.getCreatedAt();
+        this.likecnt = board.getLikecnt();
     }
 }
 
