@@ -5,8 +5,9 @@ import com.sparta.lv5_board.dto.CommentRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Getter
+@Getter@Setter
 @Entity
 @Table(name = "comment")
 @NoArgsConstructor
@@ -30,8 +31,8 @@ public class Comment extends TimeStamped {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Comment(String username, Board board, CommentRequestDto commentRequestDto) {
-        this.username = user.getUsername();
+    public Comment(User user, Board board, CommentRequestDto commentRequestDto) {
+        this.user = user;
         this.board = board;
         this.comment = commentRequestDto.getComment();
     }

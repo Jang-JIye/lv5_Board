@@ -28,7 +28,8 @@ public class CommentService {
         Board board = boardRepository.findById(commentRequestDto.getBoardId())
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
-        Comment comment = new Comment(user.getUsername(), board, commentRequestDto);
+        Comment comment = new Comment(user, board, commentRequestDto);
+        comment.setUsername(user.getUsername());
         Comment saveComment = commentRepository.save(comment);
 
         return new CommentResponseDto(saveComment);
