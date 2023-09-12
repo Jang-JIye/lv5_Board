@@ -30,13 +30,14 @@ public class CommentController {
 
     // update-Comment
     @PutMapping("/comments/{commentId}")
-    public ResponseEntity<CommentResponseDto> updateComment(
+    public ResponseEntity<StatusResponseDto> updateComment(
             @PathVariable Long commentId,
             @RequestBody CommentRequestDto commentRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        var result = commentService.updateComment(commentId, commentRequestDto, userDetails.getUser());
-        return ResponseEntity.ok(result);
+//        var result = commentService.updateComment(commentId, commentRequestDto, userDetails.getUser());
+//        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(commentService.updateComment(commentId, commentRequestDto, userDetails.getUser()));
     }
 
     // delete-Comment

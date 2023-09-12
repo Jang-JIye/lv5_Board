@@ -37,14 +37,14 @@ public class CommentService {
 
     // Comment 수정
     @Transactional
-    public CommentResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto, User user) {
+    public StatusResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto, User user) {
         Comment comment = findComment(commentId);
 
         if (user.getRole().equals(UserRoleEnum.USER) && !comment.getUser().getId().equals(user.getId()) ) {
-            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
+            return new StatusResponseDto("작성자만 수정할 수 있습니다.", HttpStatus.BAD_REQUEST.value());
         }
         comment.update(commentRequestDto);
-        return new CommentResponseDto(comment);
+        return new StatusResponseDto("수정 성공", HttpStatus.OK.value());
     }
 
     // Comment 삭제
