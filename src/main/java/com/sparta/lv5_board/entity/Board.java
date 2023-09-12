@@ -33,6 +33,9 @@ public class Board extends TimeStamped {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "like_cnt")
+    private Integer likecnt = 0;
+
 
     public Board(BoardRequestDto requestDto, User user) {
         this.title = requestDto.getTitle();

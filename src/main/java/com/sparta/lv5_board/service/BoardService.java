@@ -3,9 +3,11 @@ package com.sparta.lv5_board.service;
 import com.sparta.lv5_board.dto.BoardRequestDto;
 import com.sparta.lv5_board.dto.BoardResponseDto;
 import com.sparta.lv5_board.entity.Board;
+import com.sparta.lv5_board.entity.LikeBoard;
 import com.sparta.lv5_board.entity.User;
 import com.sparta.lv5_board.entity.UserRoleEnum;
 import com.sparta.lv5_board.repository.BoardRepository;
+import com.sparta.lv5_board.repository.LikeBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final LikeBoardRepository likeBoardRepository;
 
 
 // Create
@@ -91,10 +94,26 @@ public class BoardService {
         return ResponseEntity.ok("삭제 성공!");
     }
 
-
-    private Board findBoard(Long id) {
+    public Board findBoard(Long id) {
         return boardRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 메모는 존재하지 않습니다."));
+    }
+@Transactional
+    public ResponseEntity<String> addLike(Long id, User user) {
+        Board board = findBoard(id);
+
+        if (!likeBoardRepository.existsByUserAndBoard(user, board)) {
+            board.setLikecnt(board.getLikecnt() + 1);
+
+            likeBoardRepository.save(new LikeBoard(user, board));
+
+            return ResponseEntity.ok().body("좋야요!");
+        } else {
+            board.setLikecnt(board.getLikecnt() - 1);
+            likeBoardRepository.deleteByUserAndBoard(user, board);
+
+            return ResponseEntity.ok().body("좋아요 취소!");
+        }
     }
 
 

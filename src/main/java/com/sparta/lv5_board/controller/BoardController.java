@@ -53,4 +53,10 @@ public class BoardController {
     public ResponseEntity<String> deleteBoard(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return boardService.deleteBoard(id, userDetails.getUser());
     }
+
+    //like
+    @PostMapping("/boards/{id}/likes")
+    public ResponseEntity<String> addLike(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails ) {
+        return boardService.addLike(id, userDetails.getUser());
+    }
 }
