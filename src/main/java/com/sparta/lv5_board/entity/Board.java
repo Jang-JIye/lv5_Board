@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter @Setter
 @Table(name = "board")
@@ -33,6 +36,9 @@ public class Board extends TimeStamped {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    private List<Comment> commentList = new ArrayList<>();
+
     @Column(name = "like_cnt")
     private Integer likeCnt = 0;
 
@@ -49,5 +55,9 @@ public class Board extends TimeStamped {
         this.title = requestDto.getTitle();
         this.username = user.getUsername();
         this.contents = requestDto.getContents();
+    }
+
+    public List<Comment> getComments() {
+        return commentList;
     }
 }

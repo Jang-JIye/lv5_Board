@@ -8,7 +8,5 @@ import java.util.List;
 public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findAllByOrderByModifiedAtDesc();
 
-//    List<Board> findAllByUserOrderByModifiedAtDesc(User user);
 
-    List<Board> findAllByUserIdOrderByModifiedAtDesc(Long id);
 }

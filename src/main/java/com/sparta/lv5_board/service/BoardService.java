@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -36,29 +37,31 @@ public class BoardService {
 
     //ReadAll
     public List<BoardResponseDto> getAllBoards(User user) {
-        //DB 조회
-        UserRoleEnum userRoleEnum = user.getRole();
-        List<Board> boardList;
-
-        if (userRoleEnum == UserRoleEnum.USER) {
-            boardList = boardRepository.findAllByUserIdOrderByModifiedAtDesc(user.getId());  // 유저권한, 현재 유저의 메모만 조회
-        } else {
-            boardList = boardRepository.findAllByOrderByModifiedAtDesc();  // 관리자권한, 모든 메모 조회
-        }
-        return boardList.stream().map(BoardResponseDto::new).toList();
+//        //DB 조회
+//        UserRoleEnum userRoleEnum = user.getRole();
+//        List<Board> boardList;
+//
+//        if (userRoleEnum == UserRoleEnum.USER) {
+//            boardList = boardRepository.findAllByUserIdOrderByModifiedAtDesc(user.getId());  // 유저권한, 현재 유저의 메모만 조회
+//        } else {
+//            boardList = boardRepository.findAllByOrderByModifiedAtDesc();  // 관리자권한, 모든 메모 조회
+//        }
+//        return boardList.stream().map(BoardResponseDto::new).toList();
+        return boardRepository.findAllByOrderByModifiedAtDesc().stream().map(BoardResponseDto::new).collect(Collectors.toList());
     }
 
 
     // Read
-    public BoardResponseDto getBoard(Long id, User user) {
-        // 해당 메모가 DB에 존재하는지 확인
-        Board board = findBoard(id);
-
-        // 해당 메모의 작성자와 현재 로그인한 사용자를 비교하여 작성자가 같지 않으면 예외 발생
-        if (user.getRole() == UserRoleEnum.USER && !board.getUser().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("해당 메모에 접근 권한이 없습니다.");
-        }
-        return new BoardResponseDto(board);
+    public BoardResponseDto getBoard(Long id, User user, boolean getComments) {
+//        // 해당 메모가 DB에 존재하는지 확인
+//        Board board = findBoard(id);
+//
+//        // 해당 메모의 작성자와 현재 로그인한 사용자를 비교하여 작성자가 같지 않으면 예외 발생
+//        if (user.getRole() == UserRoleEnum.USER && !board.getUser().getId().equals(user.getId())) {
+//            throw new IllegalArgumentException("해당 메모에 접근 권한이 없습니다.");
+//        }
+//        return new BoardResponseDto(board);
+        return new BoardResponseDto(findBoard(id), getComments);
     }
 
 
@@ -67,9 +70,9 @@ public class BoardService {
     public ResponseEntity<String> updateBoard(Long id, BoardRequestDto requestDto, User user) {
         // 해당 메모가 DB에 존재하는지 확인
         Board board = findBoard(id);
-        // 해당 메모의 작성자와 현재 로그인한 사용자를 비교하여 작성자가 같지 않으면 예외 발생
-        if (!board.getUser().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("해당 메모를 수정할 권한이 없습니다.");
+        // 해당 메모의 작성자와 현재 로그인한 사용자를 비교하여 작성자가 같지 않으면 예외 발생, 어드민이 아닐 시
+        if (user.getRole() == UserRoleEnum.USER && !board.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
         // memo 수정
         board.update(requestDto);
@@ -85,8 +88,8 @@ public class BoardService {
         // 해당 메모가 DB에 존재하는지 확인
         Board board = findBoard(id);
 
-        if (!board.getUser().getId().equals(user.getId())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("작성자가 다릅니다.");
+        if (user.getRole() == UserRoleEnum.USER && !board.getUser().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("작성자만 삭제할 수 있습니다.");
         }
         // memo 삭제
         boardRepository.delete(board);

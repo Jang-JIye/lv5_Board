@@ -35,8 +35,8 @@ public class BoardController {
 
 // Read
     @GetMapping("/boards/{id}")
-    public BoardResponseDto getBoard(@PathVariable Long id,  @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return boardService.getBoard(id, userDetails.getUser());
+    public BoardResponseDto getBoard(@PathVariable Long id,  @AuthenticationPrincipal UserDetailsImpl userDetails, boolean getComments) {
+        return boardService.getBoard(id, userDetails.getUser(), getComments);
     }
 
 // Update
