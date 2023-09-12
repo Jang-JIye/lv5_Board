@@ -20,26 +20,26 @@ public class BoardController {
         this.boardService = boardService;
     }
 
-    //create
+// Create
     @PostMapping("/boards")
     public BoardResponseDto createBoard(@RequestBody BoardRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return boardService.createBoard(requestDto, userDetails.getUser());
     }
 
-    //readAll
+// ReadAll
     @GetMapping("/boards")
     public List<BoardResponseDto> getAllBoard(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return boardService.getBoards(userDetails.getUser());
+        return boardService.getAllBoards(userDetails.getUser());
     }
 
 
-    //readacademy
+// Read
     @GetMapping("/boards/{id}")
     public BoardResponseDto getBoard(@PathVariable Long id,  @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return boardService.getBoard(id, userDetails.getUser());
     }
 
-    //update
+// Update
     @PutMapping("/boards/{id}")
     public ResponseEntity<String> updateBoard(@PathVariable Long id, @RequestBody BoardRequestDto requestDto
                                               , @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -47,7 +47,8 @@ public class BoardController {
 
     }
 
-    //delete
+
+// Delete
     @DeleteMapping("/boards/{id}")
     public ResponseEntity<String> deleteBoard(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return boardService.deleteBoard(id, userDetails.getUser());
