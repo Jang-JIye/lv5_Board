@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@Table(name = "comment")
 @NoArgsConstructor
 public class Comment extends TimeStamped {
     @Id
@@ -20,14 +21,18 @@ public class Comment extends TimeStamped {
     @Column(nullable = false)
     private String username;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false)
     @JsonIgnore
     private Board board;
 
-    public Comment(String username, CommentRequestDto commentRequestDto, Board board) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    public Comment(String username, Board board, CommentRequestDto commentRequestDto) {
+        this.username = user.getUsername();
         this.board = board;
-        this.username = username;
         this.comment = commentRequestDto.getComment();
     }
 

@@ -13,7 +13,7 @@ public class SignupRequestDto {
     private String username;
 
     @NotBlank
-    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[0-9]).{8,15}$", message = "알파벳 대소문자(a~z, A~Z)와 숫자(0~9)로 구성된 8~15자의 문자열이어야 합니다.")
+    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+-=]).{8,15}$", message = "알파벳 대소문자(a~z, A~Z)와 숫자(0~9, 숫자키 특수문자로 구성된 8~15자의 문자열이어야 합니다.")
     private String password;
 
     private boolean admin = false;

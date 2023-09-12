@@ -28,7 +28,7 @@ public class CommentService {
         Board board = boardRepository.findById(commentRequestDto.getBoardId())
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
-        Comment comment = new Comment(user.getUsername(), commentRequestDto, board);
+        Comment comment = new Comment(user.getUsername(), board, commentRequestDto);
         Comment saveComment = commentRepository.save(comment);
 
         return new CommentResponseDto(saveComment);
@@ -40,23 +40,22 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("수정할 댓글이 존재하지 않습니다."));
 
-        if (comment.getUsername().equals(user.getUsername()) || user.getRole().equals(UserRoleEnum.ADMIN)) {
-            comment.update(commentRequestDto);
-            return new CommentResponseDto(comment);
-        } else {
+        if (user.getRole().equals(UserRoleEnum.USER) && !comment.getUser().getId().equals(user.getId()) ) {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
+        comment.update(commentRequestDto);
+        return new CommentResponseDto(comment);
     }
 
     // Comment 삭제
     public StatusResponseDto deleteComment(Long commentId, User user) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
-        if (comment.getUsername().equals(user.getUsername()) || user.getRole().equals(UserRoleEnum.ADMIN)) {
-            commentRepository.delete(comment);
-            return new StatusResponseDto("삭제 성공", HttpStatus.OK.value());
-        } else {
+
+        if (user.getRole().equals(UserRoleEnum.USER) && !comment.getUser().getId().equals(user.getId()) ) {
             return new StatusResponseDto("작성자만 삭제할 수 있습니다.", HttpStatus.BAD_REQUEST.value());
         }
+        commentRepository.delete(comment);
+        return new StatusResponseDto("삭제 성공", HttpStatus.OK.value());
     }
 }
