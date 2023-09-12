@@ -4,14 +4,13 @@ package com.sparta.lv5_board.service;
 import com.sparta.lv5_board.dto.CommentRequestDto;
 import com.sparta.lv5_board.dto.CommentResponseDto;
 import com.sparta.lv5_board.dto.StatusResponseDto;
-import com.sparta.lv5_board.entity.Board;
-import com.sparta.lv5_board.entity.Comment;
-import com.sparta.lv5_board.entity.User;
-import com.sparta.lv5_board.entity.UserRoleEnum;
+import com.sparta.lv5_board.entity.*;
 import com.sparta.lv5_board.repository.BoardRepository;
 import com.sparta.lv5_board.repository.CommentRepository;
+import com.sparta.lv5_board.repository.LikeBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +20,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
+    private final LikeBoardRepository likeBoardRepository;
 
     // Comment 작성
     @Transactional
@@ -58,5 +58,24 @@ public class CommentService {
         }
         commentRepository.delete(comment);
         return new StatusResponseDto("삭제 성공", HttpStatus.OK.value());
+    }
+
+    @Transactional
+    public ResponseEntity<String> addLike(Long commentId, User user) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+
+        if (!likeBoardRepository.existsByUserAndComment(user, comment)) {
+            comment.setLikeCnt(comment.getLikeCnt() + 1);
+
+            likeBoardRepository.save(new LikeBoard(user, comment));
+
+            return ResponseEntity.ok().body("좋아요!");
+        } else {
+            comment.setLikeCnt(comment.getLikeCnt() - 1);
+            likeBoardRepository.deleteByUserAndComment(user, comment);
+
+            return ResponseEntity.ok().body("좋아요 취소!");
+        }
     }
 }

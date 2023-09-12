@@ -16,7 +16,11 @@ public class LikeBoard {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id", nullable = false)
+    @JoinColumn(name = "comment_id", nullable = true)
+    private Comment comment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id", nullable = true)
     private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,6 +31,12 @@ public class LikeBoard {
     public LikeBoard(User user, Board board) {
         this.user = user;
         this.board = board;
+
+    }
+
+    public LikeBoard(User user, Comment comment) {
+        this.user = user;
+        this.comment = comment;
 
     }
 
