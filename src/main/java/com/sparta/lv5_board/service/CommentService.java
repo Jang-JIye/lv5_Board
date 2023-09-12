@@ -38,8 +38,7 @@ public class CommentService {
     // Comment 수정
     @Transactional
     public CommentResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto, User user) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("수정할 댓글이 존재하지 않습니다."));
+        Comment comment = findComment(commentId);
 
         if (user.getRole().equals(UserRoleEnum.USER) && !comment.getUser().getId().equals(user.getId()) ) {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
@@ -50,8 +49,7 @@ public class CommentService {
 
     // Comment 삭제
     public StatusResponseDto deleteComment(Long commentId, User user) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+        Comment comment = findComment(commentId);
 
         if (user.getRole().equals(UserRoleEnum.USER) && !comment.getUser().getId().equals(user.getId()) ) {
             return new StatusResponseDto("작성자만 삭제할 수 있습니다.", HttpStatus.BAD_REQUEST.value());
@@ -62,8 +60,7 @@ public class CommentService {
 
     @Transactional
     public ResponseEntity<String> addLike(Long commentId, User user) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+        Comment comment = findComment(commentId);
 
         if (!likeBoardRepository.existsByUserAndComment(user, comment)) {
             comment.setLikeCnt(comment.getLikeCnt() + 1);
@@ -77,5 +74,11 @@ public class CommentService {
 
             return ResponseEntity.ok().body("좋아요 취소!");
         }
+    }
+
+    private Comment findComment(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(
+                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
+        );
     }
 }

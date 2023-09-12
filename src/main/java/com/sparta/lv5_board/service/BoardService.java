@@ -24,7 +24,7 @@ public class BoardService {
     private final LikeBoardRepository likeBoardRepository;
 
 
-// Create
+    // Create
     public BoardResponseDto createBoard(BoardRequestDto requestDto, User user) {
         //RequestDto -> Entity
         Board board = boardRepository.save(new Board(requestDto, user));
@@ -34,13 +34,13 @@ public class BoardService {
     }
 
 
-//ReadAll
+    //ReadAll
     public List<BoardResponseDto> getAllBoards(User user) {
         //DB 조회
         UserRoleEnum userRoleEnum = user.getRole();
         List<Board> boardList;
 
-        if(userRoleEnum == UserRoleEnum.USER) {
+        if (userRoleEnum == UserRoleEnum.USER) {
             boardList = boardRepository.findAllByUserIdOrderByModifiedAtDesc(user.getId());  // 유저권한, 현재 유저의 메모만 조회
         } else {
             boardList = boardRepository.findAllByOrderByModifiedAtDesc();  // 관리자권한, 모든 메모 조회
@@ -49,7 +49,7 @@ public class BoardService {
     }
 
 
-// Read
+    // Read
     public BoardResponseDto getBoard(Long id, User user) {
         // 해당 메모가 DB에 존재하는지 확인
         Board board = findBoard(id);
@@ -62,7 +62,7 @@ public class BoardService {
     }
 
 
-// Update
+    // Update
     @Transactional
     public ResponseEntity<String> updateBoard(Long id, BoardRequestDto requestDto, User user) {
         // 해당 메모가 DB에 존재하는지 확인
@@ -79,7 +79,7 @@ public class BoardService {
     }
 
 
-// Delete
+    // Delete
     @Transactional
     public ResponseEntity<String> deleteBoard(Long id, User user) {
         // 해당 메모가 DB에 존재하는지 확인
@@ -94,11 +94,7 @@ public class BoardService {
         return ResponseEntity.ok("삭제 성공!");
     }
 
-    public Board findBoard(Long id) {
-        return boardRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("선택한 메모는 존재하지 않습니다."));
-    }
-@Transactional
+    @Transactional
     public ResponseEntity<String> addLike(Long id, User user) {
         Board board = findBoard(id);
 
@@ -116,5 +112,9 @@ public class BoardService {
         }
     }
 
+    private Board findBoard(Long id) {
+        return boardRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다."));
+    }
 
 }
