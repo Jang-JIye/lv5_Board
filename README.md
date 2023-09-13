@@ -22,8 +22,11 @@
    - DB에 이미 존재하는 username으로 회원가입을 요청한 경우 "중복된 username 입니다." 라는 에러메시지와 statusCode: 400을 Client에 반환하기
    - 로그인 시, 전달된 username과 password 중 맞지 않는 정보가 있다면 "회원을 찾을 수 없습니다."라는 에러메시지와 statusCode: 400을 Client에 반환하기
    - 회원가입 시 username과 password의 구성이 알맞지 않으면 에러메시지와 statusCode: 400을 Client에 반환하기<br/>
+   <br/>
 
-*****
+****
+   <br/>
+
 #### 추가
    - 회원탈퇴(기능추가), 게시글 삭제, 댓글 삭제 시 연관된 데이터 모두 삭제될 수 있도록 구현해 보세요!
    - 대댓글 기능을 만들어 보세요!
@@ -35,5 +38,11 @@
      - 카테고리 별로 게시글을 조회하는 기능 추가하기
    - AccessToken, RefreshToken에 대해 구글링해 보고 RefreshToken을 적용해 보세요!
    - 프로젝트에 swagger 를 구글링해 보고 적용해 보세요!
+   <br/>
+   
+****
+
+   <br/>
+
 ## ERD
 ![lv5](https://github.com/Jang-JIye/lv4_Board/assets/117057863/89d2d25b-afeb-4ca7-8825-cd4b904f73ec)
