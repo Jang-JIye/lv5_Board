@@ -1,5 +1,6 @@
 package com.sparta.lv5_board.service;
 
+import com.sparta.lv5_board.dto.BoardAllResponseDto;
 import com.sparta.lv5_board.dto.BoardRequestDto;
 import com.sparta.lv5_board.dto.BoardResponseDto;
 import com.sparta.lv5_board.entity.Board;
@@ -26,22 +27,23 @@ public class BoardService {
 
 
     // Create
-    public BoardResponseDto createBoard(BoardRequestDto requestDto, User user) {
+    public BoardAllResponseDto createBoard(BoardRequestDto requestDto, User user) {
         Board board = boardRepository.save(new Board(requestDto, user));
         //Entity -> ResponseDto
-        return new BoardResponseDto(board);
+        return new BoardAllResponseDto(board);
     }
 
 
     //ReadAll
-    public List<BoardResponseDto> getAllBoards(User user) {
-        return boardRepository.findAllByOrderByModifiedAtDesc().stream().map(BoardResponseDto::new).collect(Collectors.toList());
+    public List<BoardAllResponseDto> getAllBoards(User user) {
+        List<Board> boardList = boardRepository.findAllByOrderByModifiedAtDesc();
+        return boardList.stream().map(BoardAllResponseDto::new).collect(Collectors.toList());
     }
 
 
     // Read
-    public BoardResponseDto getBoard(Long id, User user, boolean getComments) {
-        return new BoardResponseDto(findBoard(id), getComments);
+    public BoardResponseDto getBoard(Long id, User user) {
+        return new BoardResponseDto(findBoard(id));
     }
 
 

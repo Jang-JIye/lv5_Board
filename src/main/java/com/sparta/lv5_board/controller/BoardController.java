@@ -1,5 +1,6 @@
 package com.sparta.lv5_board.controller;
 
+import com.sparta.lv5_board.dto.BoardAllResponseDto;
 import com.sparta.lv5_board.dto.BoardRequestDto;
 import com.sparta.lv5_board.dto.BoardResponseDto;
 import com.sparta.lv5_board.security.UserDetailsImpl;
@@ -22,21 +23,21 @@ public class BoardController {
 
 // Create
     @PostMapping("/boards")
-    public BoardResponseDto createBoard(@RequestBody BoardRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public BoardAllResponseDto createBoard(@RequestBody BoardRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return boardService.createBoard(requestDto, userDetails.getUser());
     }
 
 // ReadAll
     @GetMapping("/boards")
-    public List<BoardResponseDto> getAllBoard(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public List<BoardAllResponseDto> getAllBoard(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return boardService.getAllBoards(userDetails.getUser());
     }
 
 
 // Read
     @GetMapping("/boards/{id}")
-    public BoardResponseDto getBoard(@PathVariable Long id,  @AuthenticationPrincipal UserDetailsImpl userDetails, boolean getComments) {
-        return boardService.getBoard(id, userDetails.getUser(), getComments);
+    public BoardResponseDto getBoard(@PathVariable Long id,  @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return boardService.getBoard(id, userDetails.getUser());
     }
 
 // Update
