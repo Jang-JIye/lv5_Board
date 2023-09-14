@@ -3,11 +3,13 @@ package com.sparta.lv5_board.service;
 import com.sparta.lv5_board.dto.BoardAllResponseDto;
 import com.sparta.lv5_board.dto.BoardRequestDto;
 import com.sparta.lv5_board.dto.BoardResponseDto;
+import com.sparta.lv5_board.dto.CommentResponseDto;
 import com.sparta.lv5_board.entity.Board;
 import com.sparta.lv5_board.entity.LikeBoard;
 import com.sparta.lv5_board.entity.User;
 import com.sparta.lv5_board.entity.UserRoleEnum;
 import com.sparta.lv5_board.repository.BoardRepository;
+import com.sparta.lv5_board.repository.CommentRepository;
 import com.sparta.lv5_board.repository.LikeBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
     private final LikeBoardRepository likeBoardRepository;
 
 
@@ -70,6 +73,9 @@ public class BoardService {
         if (user.getRole() == UserRoleEnum.USER && !board.getUser().getUserId().equals(user.getUserId())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("작성자만 삭제할 수 있습니다.");
         }
+        // 해당 board와 관련된 모든 comment 삭제
+        commentRepository.deleteById(id);
+
         boardRepository.delete(board);
 
         return ResponseEntity.ok("삭제 성공!");
