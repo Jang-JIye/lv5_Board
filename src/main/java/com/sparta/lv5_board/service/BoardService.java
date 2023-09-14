@@ -3,7 +3,6 @@ package com.sparta.lv5_board.service;
 import com.sparta.lv5_board.dto.BoardAllResponseDto;
 import com.sparta.lv5_board.dto.BoardRequestDto;
 import com.sparta.lv5_board.dto.BoardResponseDto;
-import com.sparta.lv5_board.dto.CommentResponseDto;
 import com.sparta.lv5_board.entity.Board;
 import com.sparta.lv5_board.entity.LikeBoard;
 import com.sparta.lv5_board.entity.User;
