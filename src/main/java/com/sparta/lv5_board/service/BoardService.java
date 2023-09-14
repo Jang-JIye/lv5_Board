@@ -50,7 +50,7 @@ public class BoardService {
     public ResponseEntity<String> updateBoard(Long id, BoardRequestDto requestDto, User user) {
         Board board = findBoard(id);
         // 해당 메모의 작성자와 현재 로그인한 사용자를 비교하여 작성자가 같지 않으면 예외 발생, 어드민이 아닐 시
-        if (user.getRole() == UserRoleEnum.USER && !board.getUser().getId().equals(user.getId())) {
+        if (user.getRole() == UserRoleEnum.USER && !board.getUser().getUserId().equals(user.getUserId())) {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
         board.update(requestDto);
@@ -65,7 +65,7 @@ public class BoardService {
     public ResponseEntity<String> deleteBoard(Long id, User user) {
         Board board = findBoard(id);
 
-        if (user.getRole() == UserRoleEnum.USER && !board.getUser().getId().equals(user.getId())) {
+        if (user.getRole() == UserRoleEnum.USER && !board.getUser().getUserId().equals(user.getUserId())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("작성자만 삭제할 수 있습니다.");
         }
         boardRepository.delete(board);

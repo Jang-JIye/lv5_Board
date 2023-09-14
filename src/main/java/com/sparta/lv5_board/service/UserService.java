@@ -23,12 +23,12 @@ public class UserService {
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     public StatusResponseDto signup(SignupRequestDto requestDto) {
-        String username = requestDto.getUsername();
+        String userId = requestDto.getUserId();
         String password = passwordEncoder.encode(requestDto.getPassword());
 
         // 회원 중복 확인
-        Optional<User> checkUsername = userRepository.findByUsername(username);
-        if (checkUsername.isPresent()) {
+        Optional<User> checkUserId = userRepository.findByUserId(userId);
+        if (checkUserId.isPresent()) {
             return new StatusResponseDto("회원가입 실패", HttpStatus.BAD_REQUEST.value());
         }
 
@@ -40,8 +40,8 @@ public class UserService {
         }
 
         // 사용자 등록
-        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
-        User user = new User(username, encodedPassword, role);
+        String username = requestDto.getUsername();
+        User user = new User(userId, username, password, role);
         userRepository.save(user);
 
         // DB에 중복된 username 이 없다면 회원을 저장하고 Client 로 성공했다는 메시지, 상태코드 반환하기

@@ -40,7 +40,7 @@ public class CommentService {
     public StatusResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto, User user) {
         Comment comment = findComment(commentId);
 
-        if (user.getRole().equals(UserRoleEnum.USER) && !comment.getUser().getId().equals(user.getId()) ) {
+        if (user.getRole() == UserRoleEnum.USER && !comment.getUser().getUserId().equals(user.getUserId())) {
             return new StatusResponseDto("작성자만 수정할 수 있습니다.", HttpStatus.BAD_REQUEST.value());
         }
         comment.update(commentRequestDto);
@@ -51,7 +51,7 @@ public class CommentService {
     public StatusResponseDto deleteComment(Long commentId, User user) {
         Comment comment = findComment(commentId);
 
-        if (user.getRole().equals(UserRoleEnum.USER) && !comment.getUser().getId().equals(user.getId()) ) {
+        if (user.getRole() == UserRoleEnum.USER && !comment.getUser().getUserId().equals(user.getUserId())) {
             return new StatusResponseDto("작성자만 삭제할 수 있습니다.", HttpStatus.BAD_REQUEST.value());
         }
         commentRepository.delete(comment);

@@ -29,7 +29,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return getUserId();
     }
 
     @Override // 권한설정할때 사용함
@@ -63,4 +63,9 @@ public class UserDetailsImpl implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public String getUserId() {
+        return this.user.getUserId();
+    }
+
 }
